@@ -5,19 +5,19 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegEx {
+public class ValidateExpression {
     Stack<Character> bracketStack;
     HashMap<Character,Character> bracketHashMap;
 
 
-    public RegEx(){
+    public ValidateExpression(){
         bracketStack=new Stack<Character>();
         bracketHashMap =new HashMap<Character,Character>();
         bracketHashMap.put('(',')');
         bracketHashMap.put('[',']');
         bracketHashMap.put('{','}');
     }
-    public boolean valid(String s)
+    public boolean isValid(String s)
     {
         if(!s.contains("p")) {
             s=s.replace('.','p');
@@ -83,8 +83,8 @@ public class RegEx {
         String infix2="1p20p0+1";
 
         String infix="{[({9+0.9}-0.9)*-10]-2}";
-        RegEx regEx=new RegEx();
-        if(regEx.valid(infix)) {
+        ValidateExpression regEx=new ValidateExpression();
+        if(regEx.isValid(infix)) {
             System.out.println("validd");
         }
         else
