@@ -1,7 +1,5 @@
 package com;
 
-import javafx.geometry.Pos;
-
 public class MainClass {
     public static void main(String args[]){
         String infix1="2-(2)";
@@ -10,7 +8,10 @@ public class MainClass {
         String infix4="1**2";
         String infix5="1*2*";
         String infix6="*1*2";
-        String infix="1.20.0+1";
+        String infix7="1.20.0+1";
+        String infix8="{[({9+0.9}-0.9)*-100.0]-2}";
+        String infix9="";
+        String infix="{[({9+0.9}-0.9)*-100.01]-2}";
         RegEx regEx=new RegEx();
         if(regEx.valid(infix)){
             InfixToPostfix infixToPostfix=new InfixToPostfix();

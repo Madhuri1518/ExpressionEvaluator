@@ -6,82 +6,73 @@ public class InfixToPostfix {
 
     Stack<Character> stack;
 
-    private final String delimiter =",";
+    private final String DELIMITER =",";
 
     InfixToPostfix(){
-        stack=new Stack<Character>();
+        stack= new Stack<>();
        // postfix=new String();
     }
     public String convert(String infix){
         String postfix="";
         int length = infix.length();
-        l:for(int currIndex = 0; currIndex< length; currIndex++){
-            char currChar=infix.charAt(currIndex);
-            String digit="";
 
-            //boolean firstPoint=true;
-            
-            while(Character.isLetterOrDigit(currChar)||(currChar=='.')) {
-                /*if(currChar=='.') {
-                    if(firstPoint)
-                    firstPoint = false;
-                    else
-                        return "Invalid Expression";
-                    if(!Character.isLetterOrDigit(infix.charAt(currIndex+1)))
-                        return "Invalid Expression0";
-                }*/
-                digit += currChar;
-                currIndex++;
-                if(currIndex< length)
+        for(int currIndex = 0; currIndex< length; currIndex++){
+
+
+            char currChar=infix.charAt(currIndex);
+
+            // checks for digit
+            if (Character.isLetterOrDigit(currChar)||(currChar=='.')) {
+                String digit = ""+currChar;
+
+                while ((currIndex+1)<length &&
+                        (Character.isLetterOrDigit(infix.charAt(currIndex+1))
+                        || (infix.charAt(currIndex+1) == '.'))) {
+
+                    currIndex++;
                     currChar=infix.charAt(currIndex);
-                else {
-                    postfix += digit+ delimiter;
-                    break l;
+                    digit += currChar;
+                }
+
+                if (!digit.isEmpty()) {
+                    postfix += digit + DELIMITER;
                 }
             }
 
-            if(!digit.isEmpty()) {
-                postfix += digit+ delimiter;
-            }
-            if (isOpenBracket(currChar)) {
+            //checks if open bracket then adds to stack
+            else if (isOpenBracket(currChar)) {
                 stack.push(currChar);
                 if(isSign(infix.charAt(currIndex+1))) {
-                    postfix += infix.charAt(currIndex + 1);
                     currIndex++;
+                    postfix += infix.charAt(currIndex);
                 }
             }
+            //checks if closed bracket
             else if(isCloseBracket(currChar)){
 
                     while (!stack.isEmpty() && !isOpenBracket(stack.peek()))
-                        postfix+=stack.pop()+ delimiter;
-                    /*if (!stack.isEmpty() && !isOpenBracket(stack.peek()))
-                        return "Invalid Expression2"; // invalid expression
-                    else*/
-                        stack.pop();
-                }
+                        postfix+=stack.pop()+ DELIMITER;
+                    stack.pop();
+            }
+
+            //operator
             else{
-                /*if(!isOperator(c))
-                    return "Invalid Expression4";*/
                 while(!stack.isEmpty() && operatorPrecedence(currChar)<= operatorPrecedence(stack.peek())){
-                    /*if(isOpenBracket(stack.peek()))
-                        return "Invalid Expression3";*/
                     postfix += stack.pop();
                     if(currIndex!=0)
-                        postfix += delimiter;
+                        postfix += DELIMITER;
                 }
                 stack.push(currChar);
                 if(isSign(infix.charAt(currIndex+1))) {
-                    postfix += infix.charAt(currIndex + 1);
                     currIndex++;
+                    postfix += infix.charAt(currIndex);
                 }
             }
         }
 
-        while (!stack.isEmpty()){
-            /*if(stack.peek().equals("("))
-                return "Invalid Expression";*/
-            postfix += stack.pop()+ delimiter;
-        }
+        while (!stack.isEmpty())
+            postfix += stack.pop()+ DELIMITER;
+
         return postfix;
     }
 
@@ -133,18 +124,4 @@ public class InfixToPostfix {
         return false;
     }
 
-    /*private boolean isLastClosedBracket(char c){
-        if(bracketStack.isEmpty())
-            return false;
-        char lastOpenBracket=bracketStack.peek();
-        if(bracketHashMap.get(lastOpenBracket)==c)
-            return true;
-        return false;
-    }*/
-
-    public static void main(String args[]){
-        InfixToPostfix infixToPostfix=new InfixToPostfix();
-        System.out.println(infixToPostfix.convert("2(0.6+0.4)"));
-
-    }
 }

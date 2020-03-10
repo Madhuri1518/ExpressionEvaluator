@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 public class PostfixEvaluation
 {
+    public static final String DELIMITER = ",";
     Stack<Double> stack;
     double str[]=new double[10];
     int top=-1;
@@ -15,23 +16,17 @@ public class PostfixEvaluation
     public String evaluate(String postfix)
     {
         double op1,op2;
-        String expression[]=postfix.split(",");
-        /*if(expression.length<1)
-            return "Invalid expression";
-        else*/ if(expression.length==1){
+        String expression[]=postfix.split(DELIMITER);
+        if(expression.length==1){
             if(isDigit(expression[0]))
                 return expression[0]+"";
         }
         for(String op:expression) {
-            //System.out.println(op+isDigit(op));
-            if (isDigit(op)){
-                System.out.println(op+" number");
+            if (isDigit(op))
                 stack.push(Double.parseDouble(op));
-            }else {
+            else {
                 op2 = stack.pop();
                 op1 = stack.pop();
-                //System.out.print(op1+" "+op+" "+op2);
-
                 char fd = op.charAt(0);
                 switch (fd) {
                     case '+':
@@ -46,15 +41,11 @@ public class PostfixEvaluation
                     case '/':
                         stack.push(op1 / op2);
                         break;
-
                 }
-                //System.out.println("="+stack.peek());
             }
         }
         String res=stack.pop()+"";
-       /* if(!stack.isEmpty())
-            return "Invalid Expression";
-        */return res;
+        return res;
     }
 
     boolean isDigit(String cc)
