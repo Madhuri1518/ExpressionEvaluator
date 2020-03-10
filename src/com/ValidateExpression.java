@@ -23,9 +23,10 @@ public class ValidateExpression {
             s=s.replace('.','p');
             //replace '.' with 'p'
             // regex using . is not handled properly
-            Pattern pattern = Pattern.compile("^([\\(\\{\\[]*[\\+-]?\\d*p?\\d+)" +
-                    "([\\+-/\\*][\\(\\{\\[]*[\\+-]?\\d*p?\\d+[\\)\\}\\]]*)*");
+            Pattern pattern = Pattern.compile("^([({\\[]*[+-]?\\d*p?\\d+[)}\\]]*)" +
+                    "([+-/*][({\\[]*[+-]?\\d*p?\\d+[)}\\]]*)*$");
 
+            //System.out.println(pattern+" \n"+pattern.matcher(s)+"\n"+s+pattern.matcher(s).matches());
             Matcher matcher1 = pattern.matcher(s);
             if (matcher1.matches())
                 return isBracketsAligned(s);
@@ -82,7 +83,9 @@ public class ValidateExpression {
         String infix1="{[({9+0pp9}-0p9)*-10]-2}";
         String infix2="1p20p0+1";
 
-        String infix="{[({9+0.9}-0.9)*-10]-2}";
+        String infix3="{[({9+0.9}-0.9)*-10]-2}";
+        String infix4="(2304.3432)+342.324";
+        String infix="(342.234)+(9234.2340-24.23)";
         ValidateExpression regEx=new ValidateExpression();
         if(regEx.isValid(infix)) {
             System.out.println("validd");
