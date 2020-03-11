@@ -6,64 +6,81 @@ import java.util.regex.Pattern;
 public class PostfixEvaluation
 {
     public static final String DELIMITER = ",";
-    Stack<Double> stack;
-    int top=-1;
-    PostfixEvaluation(){
-        stack=new Stack<>();
+    String[] postfixExpression;
 
+    Stack<Double> stack;
+    PostfixEvaluation(String postfix){
+        stack=new Stack<>();
+        postfixExpression =postfix.split(DELIMITER);
     }
-    public Double evaluate(String postfix)
+    public Double evaluate()
     {
-        Double op1,op2;
-        String expression[]=postfix.split(DELIMITER);
-        if(expression.length==1){
-            if(isDigit(expression[0])){
-                return Double.parseDouble(expression[0]);
+
+        if(postfixExpression.length==1)
+                return Double.parseDouble(postfixExpression[0]);
+
+        return performPostfixEvaluation();
+    }
+
+    private Double performPostfixEvaluation() {
+
+        for (String element : postfixExpression) {
+
+            if (isDigit(element))
+                stack.push(Double.parseDouble(element));
+
+            else {
+
+                Double operand = performOperation(element);
+                if(operand==null)
+                    return null;
+                stack.push(operand);
+
             }
         }
-        else {
-            for (String op : expression) {
-                if (isDigit(op))
-                    stack.push(Double.parseDouble(op));
-                else {
-                    op2 = stack.pop();
-                    op1 = stack.pop();
-                    char fd = op.charAt(0);
-                    switch (fd) {
-                        case '+':
-                            stack.push(op1 + op2);
-                            break;
-                        case '-':
-                            stack.push(op1 - op2);
-                            break;
-                        case '*':
-                            stack.push(op1 * op2);
-                            break;
-                        case '/':
-                            if(Double.compare(op2,0)==0)
-                                return null;
-                            stack.push(op1 / op2);
-                            break;
-                    }
-                }
-            }
-        }
-        //String res=stack.pop()+"";
+        return getResult();
+    }
+
+    private Double getResult() {
         return stack.pop();
     }
 
-    boolean isDigit(String cc)
+    private Double performOperation(String element) {
+
+        Double operand2=stack.pop();;
+        Double operand1=stack.pop();
+        char operator = element.charAt(0);
+
+        return performArithmeticOperation(operand1, operand2, operator);
+
+    }
+
+    private Double performArithmeticOperation(Double operand1, Double operand2, char operator) {
+
+        switch (operator) {
+            case '+':
+                return (operand1 + operand2);
+            case '-':
+                return (operand1 - operand2);
+            case '*':
+                return (operand1 * operand2);
+            case '/':
+                if(Double.compare(operand2,0)==0)
+                    return null;
+                return (operand1 / operand2);
+        }
+        return null;
+    }
+
+    private boolean isDigit(String theChar)
     {
-        char pp;
         String regExp="^[\\+-]?\\d*\\.?\\d+$";
-        if(Pattern.matches(regExp,cc))
+
+        if(Pattern.matches(regExp,theChar))
             return true;
         else
             return false;
     }
-    public static void main(String args[]){
-        PostfixEvaluation postfixEvaluation=new PostfixEvaluation();
-        System.out.println(postfixEvaluation.evaluate("-34.9034,23.232,+"));
-    }
+
 }
 
